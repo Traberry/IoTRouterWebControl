@@ -1,0 +1,18 @@
+{
+  "data": [
+    [
+      "test-sensor",
+      "abcdefghijhklhjkp",
+      "test-device-profile",
+      "n/a",
+      "n/a"
+    ],
+    [
+        "test-abc",
+        "ghijhklhjkpabcdef",
+        "test-device-profile",
+        "n/a",
+        "n/a"
+    ]
+  ]
+}

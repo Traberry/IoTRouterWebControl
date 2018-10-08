@@ -1,0 +1,16 @@
+{
+  "Result": [
+    {
+	"ID":"1",
+    "Name":  "108gateway",
+     "DisplayName":"abcdefghijhklhjkp",
+     "CanHaveGateways":"true"
+    },
+    {
+	"ID":"2",
+	 "Name":"test-gateway",
+	 "DisplayName":"ghijhklhjkpabcdef",
+	"CanHaveGateways":"false"
+    }
+  ]
+}
