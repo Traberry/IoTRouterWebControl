@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/gpmgo/gopm/modules/log"
 	"restapi"
 )
 
@@ -15,7 +16,7 @@ func (c *OrgTableController) Get() {
 	org := restapi.GetOrganizations("10")
 	b, err := json.Marshal(org)
 	if err != nil {
-		fmt.Println(err)
+		log.Warn("organization table json marshal error: %v", err.Error())
 	}
 	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/gpmgo/gopm/modules/log"
 	"restapi"
 )
 
@@ -15,7 +16,7 @@ func (c *ServerTableController) Get() {
 	s := restapi.GetServers("10")
 	b, err := json.Marshal(s)
 	if err != nil {
-		fmt.Println(err)
+		log.Warn("server table json marshal error: %v", err.Error())
 	}
 	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
 }

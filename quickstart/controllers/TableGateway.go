@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/gpmgo/gopm/modules/log"
 	"restapi"
 )
 
@@ -26,7 +27,7 @@ func (c *GatewayTableController) Get() {
 
 	b, err := json.Marshal(gateways)
 	if err != nil {
-		fmt.Println(err)
+		log.Warn("gateway table json marshal error: %v", err.Error())
 	}
 	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
 
