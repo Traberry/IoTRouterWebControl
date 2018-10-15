@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
-	"fmt"
+	"github.com/astaxie/beego/logs"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -63,7 +63,7 @@ type UserList struct {
 	Result []externalUser
 }
 
-func makeRequest(url, method string, body io.Reader) *http.Response {
+func makeRequest(url, method string, body io.Reader) (*http.Response, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify:true},
 	}
@@ -71,7 +71,7 @@ func makeRequest(url, method string, body io.Reader) *http.Response {
 
 	req, err := http.NewRequest(method, url, body)
 	if err != nil {
-		fmt.Println(err)
+		logs.Error("make wrong request or request body: %v", err.Error())
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
@@ -79,26 +79,26 @@ func makeRequest(url, method string, body io.Reader) *http.Response {
 
 	response, err := client.Do(req)
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		return nil, err
 	}
 
-	return response
+	return response, nil
 }
 
-func CreateUser(newUser UserToBeCreated) string {
+func CreateUser(newUser UserToBeCreated) (string, error) {
 	b, err := json.Marshal(newUser)
 	if err != nil {
-		fmt.Println(err)
+		logs.Error("Error while marshaling newUser structure to json: %v", err.Error())
+		return "", err
 	}
 
-	for _, v := range b {
-		fmt.Printf("%c", v)
-	}
-	fmt.Println()
-
-	body := bytes.NewBuffer(b)
+	body := bytes.NewReader(b)
 	url := "https://" + IPAddressOfAPIServer + "/api/users"
-	resp := makeRequest(url, "POST", body)
+	resp, err := makeRequest(url, "POST", body)
+	if err != nil {
+		logs.Error("Error while making CreateUser REST API: %v", err.Error())
+		return "", err
+	}
 	defer resp.Body.Close()
 
 	var userID struct{
@@ -108,22 +108,26 @@ func CreateUser(newUser UserToBeCreated) string {
 		bodyByte, _ := ioutil.ReadAll(resp.Body)
 		json.Unmarshal(bodyByte, &userID)
 	}else {
-		fmt.Println(resp.Status)
+		//if false, how to return and how to handle
+
 	}
 
-	return userID.ID
-	//if false, how to return and how to handle ?
-
+	return userID.ID, nil
 }
 
 func DeleteUser(userID string) bool {
 	url := "https://" + IPAddressOfAPIServer + "/api/users/" + userID
-	resp := makeRequest(url, "DELETE", nil)
+	resp, err := makeRequest(url, "DELETE", nil)
+	if err != nil {
+		logs.Error("Error while making DeleteUser REST API: %v", err.Error())
+		return false
+	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 200 {
 		return true
 	}else {
+		//how to deal with different response code
 		return false
 	}
 }
@@ -131,17 +135,17 @@ func DeleteUser(userID string) bool {
 func UpdateUser(updatedUser UserForUpdate, userID string) bool {
 	b, err := json.Marshal(updatedUser)
 	if err != nil {
-		fmt.Println(err)
+		logs.Error("Error while marshaling updateUser structure to json: %v", err.Error())
+		return false
 	}
 
-	for _, v := range b {
-		fmt.Printf("%c", v)
-	}
-	fmt.Println()
-
-	body := bytes.NewBuffer(b)
+	body := bytes.NewReader(b)
 	url := "https://" + IPAddressOfAPIServer + "/api/users/" + userID
-	resp := makeRequest(url, "PUT", body)
+	resp, err := makeRequest(url, "PUT", body)
+	if err != nil {
+		logs.Error("Error while making UpdateUser REST API: %v", err.Error())
+		return false
+	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 200 {
@@ -154,11 +158,19 @@ func UpdateUser(updatedUser UserForUpdate, userID string) bool {
 func ChangeUserPassword(userID string, newPasswd UserPasswordChange) bool {
 	b, err := json.Marshal(newPasswd)
 	if err != nil {
-		fmt.Println(err)
+		logs.Error("Error while marshaling newPassword structure to json: %v", err.Error())
+		return false
 	}
-	body := bytes.NewBuffer(b)
+
+	body := bytes.NewReader(b)
 	url := "https://" + IPAddressOfAPIServer + "/api/users/" + userID + "/password"
-	resp := makeRequest(url, "PUT", body)
+	resp, err := makeRequest(url, "PUT", body)
+	if err != nil {
+		logs.Error("Error while making ChangeUserPassword REST API: %v", err.Error())
+		return false
+	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode == 200 {
 		return true
 	}else {
