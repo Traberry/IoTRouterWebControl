@@ -11,23 +11,14 @@ type DeviceOfAppTableController struct {
 	beego.Controller
 }
 
-var id string
-
 func (c *DeviceOfAppTableController) Get() {
+	fmt.Println("deviceOfApp request: ", c.Ctx.Request)
+
+	id := c.Ctx.Input.Param(":id")
 	devices := restapi.GetSimpleDevices(id, "10")
 	b, err := json.Marshal(devices)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("id: ", id)
-	fmt.Println(string(b))
 	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
-}
-
-/*
- *the front table only show three columns: Name, LinkMargin, Battery
- */
-func (c *DeviceOfAppTableController) Post() {
-	id = c.Input().Get("id")//the front should give the id to the backend ???
-	c.Ctx.WriteString(id)
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/gpmgo/gopm/modules/log"
+	"net/http"
 	"restapi"
 )
 
@@ -29,7 +30,12 @@ func (c *GatewayTableController) Get() {
 	if err != nil {
 		log.Warn("gateway table json marshal error: %v", err.Error())
 	}
-	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
+	//fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
+
+	_, err = c.Ctx.ResponseWriter.Write(b)
+	if err != nil {
+		http.Error(c.Ctx.ResponseWriter, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
 
 
 	/*b, err := ioutil.ReadFile("/home/h/goPath/src/quickstart/controllers/gwtable")
@@ -40,13 +46,18 @@ func (c *GatewayTableController) Get() {
 }
 
 func (c *GatewayTableController) Post() {
-	mac := c.Input().Get("mac")
+	fmt.Println("method: ", c.Ctx.Request.Method)
+	fmt.Println("url: ", c.Ctx.Request.URL)
+	fmt.Println("all: ", c.Ctx.Request)
+	mac := c.GetString("mac")//how to get mac
+	fmt.Println("mac: ", mac)
 	gatewayDetails := restapi.GetGatewayDetails(mac)
+	fmt.Println(gatewayDetails)
 
-	c.TplName = "lora.html"
+	//c.TplName = "lora.html"
 
-	fmt.Println(gatewayDetails.Altitude)
+	fmt.Println("gaodu: ", gatewayDetails.Altitude)
 
-	c.Data["LoRaAltitude"] = "100"
+	c.Data["LoRaAltitude"] = 100
 
 }

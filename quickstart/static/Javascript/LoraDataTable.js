@@ -1,5 +1,6 @@
 /**
  * Created by Administrator on 2018/8/30.
+ * Modified by Administrator on 2018/10/17.
  */
 
 /* ------组织Table  Begin  -------*/
@@ -180,8 +181,7 @@ var appData = [];
 $(function () {
     var table = $('#appTable').DataTable({
         "ajax": {
-          //  url: "/lora/applicationTable",
-            url :"apparrays.txt",
+            url: "/lora/applicationTable",
             dataSrc: "Result"
         },
         columns: [
@@ -254,8 +254,8 @@ $(function () {
 
         if (data)
         {
-            var test = ".txt";   // 如果需要变量，请修改这里
-            appDevicetable1.fnReloadAjax("appDevicearrays-1"+test);
+            var test = data.ID;   // 如果需要变量，请修改这里
+            appDevicetable1.fnReloadAjax("/lora/applicationTable/deviceOfAppID/"+test);
             $("#viewAppInfo").modal();
         }
     })
@@ -264,13 +264,13 @@ $(function () {
     var appDevicetable1 = $('#appDeviceTable').dataTable({
         //   data: appDeviceData,
         "ajax": {
-            url: "appDevicearrays.txt",
+            url: "/lora/applicationTable/deviceOfAppID/?:id",
             dataSrc: "Result"
         },
         "columns": [
             {"data": "Name"},
-            {"data": "ServiceProfileName"},
-            {"data": "Description"}
+            {"data": "DeviceStatusBattery"},
+            {"data": "DeviceStatusMargin"}
         ],
         "pagingType": "full_numbers",
         "bSort": true,
@@ -323,7 +323,15 @@ $(function () {
 var gatewayData = [];
 $(function () {
     var table = $('#gatewayTable').DataTable({
-        "ajax": "/lora/gatewayTable",
+        "ajax": {
+            url: "/lora/gatewayTable",
+            dataSrc: "Result"
+        },
+        columns: [
+            {data: "Name"},
+            {data: "MAC"},
+            {data: "Activity"}
+        ],
         "pagingType": "full_numbers",
         "bSort": true,
         "language": {
@@ -458,7 +466,17 @@ $(function () {
 var deviceData = [];
 $(function () {
     var table = $('#deviceTable').DataTable({
-        "ajax": "deviceArrays.txt",
+        "ajax": {
+            url: "/lora/deviceTable",
+            dataSrc: "Result"
+        },
+        columns: [
+            {data: "Name"},
+            {data: "DevEUI"},
+            {data: "DeviceProfileName"},
+            {data: "DeviceStatusMargin"},
+            {data: "DeviceStatusBattery"}
+        ],
         "pagingType": "full_numbers",
         "bSort": true,
         "language": {
@@ -489,7 +507,7 @@ $(function () {
         "columnDefs": [{
             orderable: false,
             //  defaultContent: "<button id='viewBtn' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button><button id='activeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='激活'><i class='fa fa-flash'></i></button><button id='closeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='关闭'><i class='fa fa-close'></i></button><button id='resetBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='重置'><i class='fa fa-refresh'></i></button>",
-            targets:   -1,
+            targets:   5,
             render : function (obj){
                 return "<button id='viewBtn' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button><button id='activeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='激活'><i class='fa fa-flash'></i></button><button id='closeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='关闭'><i class='fa fa-close'></i></button><button id='resetBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='重置'><i class='fa fa-refresh'></i></button>";
             }

@@ -20,7 +20,7 @@ func init() {
 	beego.Router("/lora/gatewayTable", &controllers.GatewayTableController{})
 	beego.Router("/lora/serverTable", &controllers.ServerTableController{})
 	beego.Router("/lora/applicationTable", &controllers.ApplicationTableController{})
-	beego.Router("/lora/applicationTable/deviceOfAppID", &controllers.DeviceOfAppTableController{})
+	beego.Router("/lora/applicationTable/deviceOfAppID/?:id", &controllers.DeviceOfAppTableController{})
 	beego.Router("/lora/deviceTable", &controllers.DeviceTableController{})
 
 }
