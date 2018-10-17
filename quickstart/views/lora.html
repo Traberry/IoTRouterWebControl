@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="../static/CSS/style.css" />
 	<link rel="stylesheet" type="text/css" href="../static/CSS/jquery.dataTables.min.css">
 	<link rel="stylesheet" type="text/css" href="../static/CSS/loading.css">
+	<link rel="stylesheet" type="text/css" href="../static/CSS/pagination.css">
 	<link rel="stylesheet" type="text/css" href="../static/font-awesome-4.4.0/css/font-awesome.min.css">
 
 	<!-- jQuery -->
@@ -25,9 +26,15 @@
 	<script src="../static/Javascript/Uniform/jquery.uniform.js"></script>
 	<script src="../static/Javascript/jQuery/modal.js"></script>
 	<script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+
 	<script src="../static/Javascript/Lora.js"></script>
-	<script src="../static/Javascript/LoraDataTable.js"></script>
+	<script src="../static/Javascript/LoraDataTable-1.js"></script>
 	<script src="../static/Javascript/buttonAction.js"></script>
+	<script src="../static/Javascript/pagination.js"></script>
+	<script src="https://cdn.datatables.net/plug-ins/1.10.16/api/fnReloadAjax.js"></script>
+	<script src="../static/Javascript/echarts.min.js"></script>
+	<script src="../static/Javascript/loraTopology.js"></script>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 	<style type="text/css">
@@ -110,7 +117,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="wifi.html" title="无线">
+					<a href="#" title="无线">
 						<i class="fa fa-wifi fa-3x icon_short"></i><span class="tab_label">无线</span>
 					</a>
 				</li>
@@ -146,8 +153,9 @@
 							<li><a href="#table_wTabs-1" title="系统配置参数">系统配置参数</a></li>
 							<li><a href="#table_wTabs-2" title="应用">应用</a></li>
 							<li><a href="#table_wTabs-3" title="网关">网关</a></li>
-							<li><a href="#table_wTabs-4" title="设备">设备</a></li>
-							<li><a href="#table_wTabs-5" title="拓扑">拓扑</a></li>
+							<li id ="deviceTab"><a href="#table_wTabs-4" title="设备" onclick="setDevice()">设备</a></li>
+							<li><a href="#table_wTabs-5" title="拓扑" onclick="setTopology()">拓扑</a></li>
+							<li><a href="#table_wTabs-6" title="用户管理">用户管理</a></li>
 						</ul>
 					</div>
 					<!-- Tab 标签设置 End-->
@@ -316,30 +324,30 @@
 									<div id="viewGatewayModal" class="modal-body">
 										<!-- 网关详细信息 Begin-->
 										<div id="ModalTab-1">
-											<h4 class="modal-title gatewayModal_title" id="LoRaGatewayName">{{.LoRaGatewayName}}</h4>
+											<h4 class="modal-title gatewayModal_title">108gateway</h4>
 											<div class="form-horizontal">
 												<div class="form-group">
 													<label class="col-sm-3 control-label modal-label">MAC地址:</label>
 													<div class="col-sm-9">
-														<span class="form-control" id="LoRaGatewayMAC">{{.LoRaGatewayMAC}}</span>
+														<span class="form-control">abcdefghijhklhjkp</span>
 													</div>
 												</div>
 												<div class="form-group">
 													<label class="col-sm-3 control-label modal-label-select">海拔:</label>
 													<div class="col-sm-9">
-														<span class="form-control" id="LoRaGatewayAltitude">{{.LoRaAltitude}}</span>
+														<span class="form-control">0米</span>
 													</div>
 												</div>
 												<div class="form-group">
 													<label class="col-sm-3 control-label modal-label">GPS坐标系:</label>
 													<div class="col-sm-9">
-														<span class="form-control" id="LoRaGatewayCoordinates"></span>
+														<span class="form-control">0,0</span>
 													</div>
 												</div>
 												<div class="form-group">
 													<label  class="col-sm-3 control-label modal-label-select">最后一次出现:</label>
 													<div class="col-sm-9">
-														<span class="form-control" id="LoRaGatewayLastSeenAt"></span>
+														<span class="form-control">一个月以前</span>
 													</div>
 												</div>
 											</div>
@@ -467,34 +475,33 @@
 						<!-- Tab 4 设备 Begin -->
 						<div id="table_wTabs-4">
 							<div class="line_grid">
-								<section class="config_table">
-									<!-- 应用 Table Begin-->
-									<table id="deviceTable" class="table table-striped table-bordered row-border hover order-column" cellspacing="0" width="100%" style="text-align: center;">
-										<thead>
-										<tr>
-											<th>设备名称</th>
-											<th>设备EUI</th>
-											<th>设备配置文件</th>
-											<th>链路边际</th>
-											<th>电量</th>
-											<th>操作</th>
-										</tr>
-										</thead>
-										<tbody></tbody>
-									</table>
-									<!-- 设备 Table End-->
+								<section class="config_table" id="deviceSection">
+									<div id="wrapper">
+										<section>
+											<div class="data-container"></div>
+											<div id="pagination-table"></div>
+										</section>
+									</div>
 								</section>
 							</div>
 						</div>
 						<!-- Tab 4 设备 End -->
 
-						<!-- Tab 5 管理 Begin -->
+						<!-- Tab 5 拓扑 Begin -->
 						<div id="table_wTabs-5">
+							<div class="line_grid">
+								<div id="container" style="width:800px;height:500px;"></div>
+							</div>
+						</div>
+						<!-- Tab 5 拓扑 End -->
+
+						<!-- Tab 6 用户管理 Begin -->
+						<div id="table_wTabs-6">
 							<div class="line_grid">
 
 							</div>
 						</div>
-						<!-- Tab 5 管理 End -->
+						<!-- Tab 6 用户管理 End -->
 
 					</div>
 					<!-- Tab 标签具体页面 End-->

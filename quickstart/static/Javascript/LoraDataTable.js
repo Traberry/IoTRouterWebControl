@@ -180,7 +180,8 @@ var appData = [];
 $(function () {
     var table = $('#appTable').DataTable({
         "ajax": {
-            url: "/lora/applicationTable",
+          //  url: "/lora/applicationTable",
+            url :"apparrays.txt",
             dataSrc: "Result"
         },
         columns: [
@@ -225,10 +226,10 @@ $(function () {
             {
                 orderable: false,
                 //defaultContent: "<button id='viewApp' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button>",
-                targets:   5,
                 render : function (obj){
-                    return "<button id='viewApp' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i><button>";
-                }
+                    return "<button id='viewApp' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button>";
+                },
+                targets:  5
             }],
         "aLengthMenu": [10, 25, 50],//也可以直接用一维数组设置数量
         "order": [[0, 'asc']]
@@ -245,47 +246,32 @@ $(function () {
     /* 每一行查看按钮点击*/
     $("#appTable tbody").on("click","#viewApp", function(){
 
-        var data = table.row($(this).parents('tr')).data();
+        //var data = table.row($(this).parents('tr')).data();
+
+        var Row = $(this).parents('tr')[0];//通过获取该td所在的tr，即td的父级元素，取出第一列序号元素
+        var data = $("#appTable").dataTable().fnGetData(Row);
+        alert (data.ID);
 
         if (data)
         {
-            $.ajax({
-                url: '/lora/applicationTable/deviceOfAppID',//请求后台加载数据的方法
-                type:'post',
-                data: "id=" + data[0] ,
-                success: function (data) {
-                    alert("发送成功");
-                },
-                error:function(e){
-                    alert("id=" + data[0]);  //当前为测试，正式时请改为“发送失败"
-                }
-            })
+            var test = ".txt";   // 如果需要变量，请修改这里
+            appDevicetable1.fnReloadAjax("appDevicearrays-1"+test);
+            $("#viewAppInfo").modal();
         }
-        $("#viewAppInfo").modal();
     })
-});
 
-/* ------应用下的设备Table  Begin  -------*/
-$(function () {
-    var table = $('#appDeviceTable').DataTable({
+    var appDeviceData=[];
+    var appDevicetable1 = $('#appDeviceTable').dataTable({
+        //   data: appDeviceData,
         "ajax": {
-            url: "/lora/applicationTable/deviceOfAppID",
+            url: "appDevicearrays.txt",
             dataSrc: "Result"
         },
-        columns: [
-            {data: "Name"},
-            {data: "DeviceStatusMargin"},
-            {data: "DeviceStatusBattery"}
+        "columns": [
+            {"data": "Name"},
+            {"data": "ServiceProfileName"},
+            {"data": "Description"}
         ],
-        /*   "ajax": {                        //带参数的ajax请求
-         url: "apparrays.txt",
-         dataType:'json',
-         data: {id:"1"}, //请求的附加参数，用json对象
-         method:'POST',
-         success: function(data){
-         $.messager.alert('消息',data.id,'');
-         },
-         },*/
         "pagingType": "full_numbers",
         "bSort": true,
         "language": {
@@ -325,6 +311,11 @@ $(function () {
             $(this).addClass('selected');
         }
     });
+});
+
+/* ------应用下的设备Table  Begin  -------*/
+$(function () {
+
 
 });
 
@@ -332,15 +323,7 @@ $(function () {
 var gatewayData = [];
 $(function () {
     var table = $('#gatewayTable').DataTable({
-        "ajax": {
-            url: "/lora/gatewayTable",
-            dataSrc: "Result"
-        },
-        columns: [
-            {data: "Name"},
-            {data: "MAC"},
-            {data: "Activity"}
-        ],
+        "ajax": "/lora/gatewayTable",
         "pagingType": "full_numbers",
         "bSort": true,
         "language": {
@@ -382,11 +365,11 @@ $(function () {
             }
         },{
             orderable: false,
+           // defaultContent: "<button id='viewrow' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button>",
             render : function (obj){
-                return "<button id='viewrow' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></NOtton>";
+                return "<button id='viewrow' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button>";
             },
-            //defaultContent: "<button id='viewrow' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button>",
-            targets:   3
+            targets:   -1
         }],
         "aLengthMenu": [10, 25, 50],//也可以直接用一维数组设置数量
     });
@@ -408,7 +391,7 @@ $(function () {
         if (data)
         {
             $.ajax({
-                url: '/lora/gatewayTable',//请求后台加载数据的方法
+                url: '/postarrays.txt',//请求后台加载数据的方法
                 type:'post',
                 data: "mac=" + data[1] ,
                 success: function (data) {
@@ -475,17 +458,7 @@ $(function () {
 var deviceData = [];
 $(function () {
     var table = $('#deviceTable').DataTable({
-        "ajax": {
-            url: "/lora/deviceTable",
-            dataSrc: "Result"
-        },
-        columns: [
-            {data: "Name"},
-            {data: "DevEUI"},
-            {data: "DeviceProfileName"},
-            {data: "DeviceStatusMargin"},
-            {data: "DeviceStatusBattery"}
-        ],
+        "ajax": "deviceArrays.txt",
         "pagingType": "full_numbers",
         "bSort": true,
         "language": {
@@ -515,11 +488,12 @@ $(function () {
         },
         "columnDefs": [{
             orderable: false,
-            //defaultContent: "<button id='viewBtn' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button><button id='activeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='激活'><i class='fa fa-flash'></i></button><button id='closeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='关闭'><i class='fa fa-close'></i></button><button id='resetBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='重置'><i class='fa fa-refresh'></i></button>",
-            targets:   5,
+            //  defaultContent: "<button id='viewBtn' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button><button id='activeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='激活'><i class='fa fa-flash'></i></button><button id='closeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='关闭'><i class='fa fa-close'></i></button><button id='resetBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='重置'><i class='fa fa-refresh'></i></button>",
+            targets:   -1,
             render : function (obj){
-                return "<button id='viewBtn' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i><button><button id='activeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='激活'><i class='fa fa-flash'></i><button><button id='closeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='关闭'><i class='fa fa-close'></i><button><button id='resetBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='重置'><i class='fa fa-refresh'></i><button>";
+                return "<button id='viewBtn' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button><button id='activeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='激活'><i class='fa fa-flash'></i></button><button id='closeBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='关闭'><i class='fa fa-close'></i></button><button id='resetBtn' class='btn btn-primary btn-table margin-left-10' type='button' title='重置'><i class='fa fa-refresh'></i></button>";
             }
+
         }],
 
         "aLengthMenu": [10, 25, 50],//也可以直接用一维数组设置数量
@@ -558,3 +532,71 @@ $(function () {
 });
 
 
+
+
+    function setDevice(){
+
+        var appArrarys = [];
+
+        $.ajax({
+            url: '/deviceArrays.txt',//请求后台加载数据的方法
+            type:'post',
+            dataType: 'json',
+            data:{Result:ID},
+            success: function(  ) {
+             //   appArrarys = Result.ID;
+                alert ("appArrarys");
+            },
+            error:function(e){
+                alert("获取应用列表失败");  //当前为测试，正式时请改为“发送失败"
+            }
+        })
+
+      //  $("#deviceSection").html()
+    };
+
+
+
+$(function() {
+    (function(name) {
+        var container = $('#pagination-' + name);
+        var sources = function () {
+            var result = [];
+
+            for (var i = 1; i < 196; i++) {
+                result.push(i);
+            }
+
+            return result;
+        }();
+
+        var options = {
+            dataSource: sources,
+            callback: function (response, pagination) {
+                window.console && console.log(response, pagination);
+
+                var dataHtml = '<ul>';
+
+                $.each(response, function (index, item) {
+                    dataHtml += '<li>' + item + '</li>';
+                });
+
+                dataHtml += '</ul>';
+
+                container.prev().html(dataHtml);
+            }
+        };
+
+        //$.pagination(container, options);
+
+        container.addHook('beforeInit', function () {
+            window.console && console.log('beforeInit...');
+        });
+        container.pagination(options);
+
+        container.addHook('beforePageOnClick', function () {
+            window.console && console.log('beforePageOnClick...');
+            //return false
+        });
+    })('demo1');
+})
