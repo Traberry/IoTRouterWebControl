@@ -377,7 +377,7 @@ $(function () {
             render : function (obj){
                 return "<button id='viewrow' class='btn btn-primary btn-table' type='button' title='查看'><i class='fa fa-eye'></i></button>";
             },
-            targets:   -1
+            targets:   3
         }],
         "aLengthMenu": [10, 25, 50],//也可以直接用一维数组设置数量
     });
@@ -399,7 +399,7 @@ $(function () {
         if (data)
         {
             $.ajax({
-                url: '/postarrays.txt',//请求后台加载数据的方法
+                url: '/lora/gatewayTable',//请求后台加载数据的方法
                 type:'post',
                 data: "mac=" + data[1] ,
                 success: function (data) {

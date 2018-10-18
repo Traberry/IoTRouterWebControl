@@ -3,7 +3,7 @@ package restapi
 import (
 	"crypto/tls"
 	"encoding/json"
-	"fmt"
+	"github.com/astaxie/beego/logs"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -144,7 +144,7 @@ type NetworkServerList struct {
 	Result []NetworkServer
 }
 
-func MakeAPIRequest(url, method string) *http.Response {
+func MakeAPIRequest(url, method string) (*http.Response, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify:true},
 	}
@@ -152,7 +152,8 @@ func MakeAPIRequest(url, method string) *http.Response {
 
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		fmt.Println(err)
+		logs.Warn("make a bad API request: %v", err.Error())
+		return nil, err
 	}
 	req.Header.Add("Accept", "application/json")
 	//req.Header.Add("Grpc-Metadata-Authorization", token)
@@ -160,10 +161,10 @@ func MakeAPIRequest(url, method string) *http.Response {
 
 	response, err := client.Do(req)
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		return nil, err
 	}
 
-	return response
+	return response, nil
 }
 
 //Would it be better if return a pointer instead of a value ???
@@ -173,14 +174,19 @@ func GetAllApplications(limit string) *ApplicationList {
 	url := "https://" + IPAddressOfAPIServer + "/api/applications?limit=" + limit
 	//url := "https://" + anotherIPAddress + "/api/applications?limit=" + limit
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetAllApplications: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetAllApplications response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -190,14 +196,19 @@ func GetAllGateways(limit string) *GatewayList {
 	var s GatewayList
 	url := "https://" + IPAddressOfAPIServer + "/api/gateways?limit=" + limit
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetAllGateways: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetAllGateways response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -207,14 +218,19 @@ func GetGatewayDetails(macAddress string) *GatewayDtails {
 	var s GatewayDtails
 	url := "https://" + IPAddressOfAPIServer + "/api/gateways/" + macAddress
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetGatewayDetails: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetGatewayDetails response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -224,14 +240,19 @@ func GetDevices(appID, limit string) *DeviceList {
 	var s DeviceList
 	url := "https://" + IPAddressOfAPIServer + "/api/applications/" + appID + "/devices?limit=" + limit
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetDevices: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetDevices response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -241,14 +262,19 @@ func GetSimpleDevices(appID, limit string) *SimpleDeviceList {
 	var s SimpleDeviceList
 	url := "https://" + IPAddressOfAPIServer + "/api/applications/" + appID + "/devices?limit=" + limit
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetSimpleDevices: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetSimpleDevices response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -258,14 +284,19 @@ func GetOrganizations(limit string) *OrganizationList {
 	var s OrganizationList
 	url := "https://" + IPAddressOfAPIServer + "/api/organizations?limit=" + limit
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetOrganizations: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetOrganizations response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -275,14 +306,19 @@ func GetUsers(limit string) *UserList {
 	var s UserList
 	url := "https://" + IPAddressOfAPIServer + "/api/users?limit=" + limit
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetUsers: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetUsers response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -292,14 +328,19 @@ func GetServers(limit string) *NetworkServerList {
 	var s NetworkServerList
 	url := "https://" + IPAddressOfAPIServer + "/api/network-servers?limit=" + limit
 
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetServers: %v", err.Error())
+		return nil
+	}
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(bodyByte, &s)
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetServers response is NOT OK: %v", response.StatusCode)
+		return nil
 	}
 
 	return &s
@@ -321,7 +362,11 @@ func GetGatewayActivity(mac string) string {
 	var activity string
 	var s GatewayStates
 	url := "https://192.168.3.109:8080/api/gateways/" + mac + "/stats?interval=day&startTimestamp=" + "2018-08-29T15:04:05.999999999Z" + "&endTimestamp=" + "2018-09-27T15:04:05.999999999Z"
-	response := MakeAPIRequest(url, "GET")
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetServers: %v", err.Error())
+		return ""
+	}
 	defer response.Body.Close()
 	if response.StatusCode == 200 {
 		bodyByte, _ := ioutil.ReadAll(response.Body)
@@ -331,7 +376,8 @@ func GetGatewayActivity(mac string) string {
 			activity += ","
 		}
 	}else {
-		fmt.Println(response.Status)
+		logs.Warn("GetGatewayActivity response is NOT OK: %v", response.StatusCode)
+		return ""
 	}
 	return activity
 }
