@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/gpmgo/gopm/modules/log"
 	"net/http"
 	"restapi"
@@ -51,8 +52,15 @@ func (c *GatewayTableController) Post() {
 	fmt.Println("all: ", c.Ctx.Request)
 	mac := c.GetString("mac")//how to get mac
 	fmt.Println("mac: ", mac)
+
 	gatewayDetails := restapi.GetGatewayDetails(mac)
-	fmt.Println(gatewayDetails)
+	//fmt.Println(gatewayDetails)
+	if gatewayDetails == nil {
+		logs.Error("gatewayDetails is nil")
+		c.Abort("500")
+	}else {
+
+	}
 
 	//c.TplName = "lora.html"
 

@@ -108,8 +108,8 @@ func CreateUser(newUser UserToBeCreated) (string, error) {
 		bodyByte, _ := ioutil.ReadAll(resp.Body)
 		json.Unmarshal(bodyByte, &userID)
 	}else {
-		//if false, how to return and how to handle
-
+		logs.Warn("CreateUser failed: %v", resp.StatusCode)
+		return "", nil
 	}
 
 	return userID.ID, nil
@@ -127,7 +127,7 @@ func DeleteUser(userID string) bool {
 	if resp.StatusCode == 200 {
 		return true
 	}else {
-		//how to deal with different response code
+		logs.Warn("DeleteUser failed: %v", resp.StatusCode)
 		return false
 	}
 }
@@ -151,6 +151,7 @@ func UpdateUser(updatedUser UserForUpdate, userID string) bool {
 	if resp.StatusCode == 200 {
 		return true
 	}else {
+		logs.Warn("UpdateUser failed: %v", resp.StatusCode)
 		return false
 	}
 }
@@ -174,6 +175,7 @@ func ChangeUserPassword(userID string, newPasswd UserPasswordChange) bool {
 	if resp.StatusCode == 200 {
 		return true
 	}else {
+		logs.Warn("ChangeUserPassword failed: %v", resp.StatusCode)
 		return false
 	}
 }
