@@ -394,19 +394,28 @@ $(function () {
     /* 每一行查看按钮点击*/
     $("#gatewayTable tbody").on("click","#viewrow", function(){
 
-        var data = table.row($(this).parents('tr')).data();
+        //var data = table.row($(this).parents('tr')).data();
+        var Row = $(this).parents('tr')[0];//通过获取该td所在的tr，即td的父级元素，取出第一列序号元素
+        var data = $("#gatewayTable").dataTable().fnGetData(Row);
+        alert (data.MAC);
 
         if (data)
         {
             $.ajax({
                 url: '/lora/gatewayTable',//请求后台加载数据的方法
                 type:'post',
-                data: "mac=" + data[1] ,
-                success: function (data) {
-                    alert("发送成功");
+                //data: "mac=" + data[1] ,
+                data: "mac=" + data.MAC,
+                success: function (jsonResult) {
+                    var obj = JSON.parse(jsonResult);
+                    var str = obj.Longtitude + "," + obj.Latitude;
+                    document.getElementById("gatewayMacAddress").innerHTML = obj.MAC;
+                    document.getElementById("gatewayAltitude").innerHTML = obj.Altitude;
+                    document.getElementById("gatewayCoordinates").innerHTML = str;
+                    document.getElementById("gatewayLastSeenAt").innerHTML = obj.LastSeenAt;
                 },
                 error:function(e){
-                    alert(data[1]);  //当前为测试，正式时请改为“发送失败"
+                    alert("发送失败");  //当前为测试，正式时请改为“发送失败"
                 }
             })
         }

@@ -12,7 +12,7 @@ type DeviceOfAppTableController struct {
 }
 
 func (c *DeviceOfAppTableController) Get() {
-	fmt.Println("deviceOfApp request: ", c.Ctx.Request)
+	//fmt.Println("deviceOfApp request: ", c.Ctx.Request)
 
 	id := c.Ctx.Input.Param(":id")
 	devices := restapi.GetSimpleDevices(id, "10")

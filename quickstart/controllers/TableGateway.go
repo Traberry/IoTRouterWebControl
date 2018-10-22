@@ -37,35 +37,23 @@ func (c *GatewayTableController) Get() {
 	if err != nil {
 		http.Error(c.Ctx.ResponseWriter, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
-
-
-	/*b, err := ioutil.ReadFile("/home/h/goPath/src/quickstart/controllers/gwtable")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))*/
 }
 
 func (c *GatewayTableController) Post() {
-	fmt.Println("method: ", c.Ctx.Request.Method)
-	fmt.Println("url: ", c.Ctx.Request.URL)
-	fmt.Println("all: ", c.Ctx.Request)
-	mac := c.GetString("mac")//how to get mac
-	fmt.Println("mac: ", mac)
+	//c.TplName = "lora.html"
+
+	mac := c.Input().Get("mac")
 
 	gatewayDetails := restapi.GetGatewayDetails(mac)
-	//fmt.Println(gatewayDetails)
 	if gatewayDetails == nil {
 		logs.Error("gatewayDetails is nil")
 		c.Abort("500")
-	}else {
-
 	}
 
-	//c.TplName = "lora.html"
-
-	fmt.Println("gaodu: ", gatewayDetails.Altitude)
-
-	c.Data["LoRaAltitude"] = 100
+	b, err := json.Marshal(gatewayDetails)
+	if err != nil {
+		log.Warn("gateway table json marshal error: %v", err.Error())
+	}
+	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
 
 }
