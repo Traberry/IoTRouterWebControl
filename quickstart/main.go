@@ -6,5 +6,7 @@ import (
 )
 
 func main() {
+	beego.BConfig.Listen.EnableHTTP = false
+
 	beego.Run()
 }
