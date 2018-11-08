@@ -42,17 +42,17 @@ func (c *ConnectionController) Get() {
 	c.Data["gateway_4"] = gw[3]
 
 	d1, d2 := netconfig.GetDNS()
-	dns1 := strings.Split(string(d1), ".")
-	c.Data["DNS1_1"] = dns1[0]
-	c.Data["DNS1_2"] = dns1[1]
-	c.Data["DNS1_3"] = dns1[2]
-	c.Data["DNS1_4"] = dns1[3]
+	DNS1 := strings.Split(string(d1), ".")
+	c.Data["DNS1_1"] = DNS1[0]
+	c.Data["DNS1_2"] = DNS1[1]
+	c.Data["DNS1_3"] = DNS1[2]
+	c.Data["DNS1_4"] = DNS1[3]
 	if d2 != nil {
-		dns2 := strings.Split(string(d2), ".")
-		c.Data["DNS2_1"] = dns2[4]
-		c.Data["DNS2_2"] = dns2[5]
-		c.Data["DNS2_3"] = dns2[6]
-		c.Data["DNS2_4"] = dns2[7]
+		DNS2 := strings.Split(string(d2), ".")
+		c.Data["DNS2_1"] = DNS2[4]
+		c.Data["DNS2_2"] = DNS2[5]
+		c.Data["DNS2_3"] = DNS2[6]
+		c.Data["DNS2_4"] = DNS2[7]
 	}
 
 	domain := netconfig.GetDomainName()
