@@ -34,13 +34,15 @@ func (c *ConnectionController) Get() {
 	c.Data["mask_3"] = mask[2]
 	c.Data["mask_4"] = mask[3]
 
-	gw := netconfig.GetGateway()
+	g := netconfig.GetGateway()
+	gw := strings.Split(string(g), ".")
 	c.Data["gateway_1"] = gw[0]
 	c.Data["gateway_2"] = gw[1]
 	c.Data["gateway_3"] = gw[2]
 	c.Data["gateway_4"] = gw[3]
 
-	dns := netconfig.GetDNS()
+	d := netconfig.GetDNS()
+	dns := strings.Split(string(d), ".")
 	c.Data["DNS1_1"] = dns[0]
 	c.Data["DNS1_2"] = dns[1]
 	c.Data["DNS1_3"] = dns[2]

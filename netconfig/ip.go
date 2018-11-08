@@ -98,7 +98,7 @@ func (ipConf *IPConfiguration) GetIPandMask() ([]string, []string){
 
 //get default gateway information by command "route -n"
 //it returns a string slice, for example: {"192", "168", "1", "1"}
-func GetGateway() []string {
+func GetGateway() []byte {
 	var g []byte
 
 	cmd := exec.Command("route", "-n")
@@ -110,15 +110,15 @@ func GetGateway() []string {
 	for i := l; stdout[i] != ' '; i++ {
 		g = append(g, stdout[i])
 	}
-	gg := strings.Split(string(g), ".")
+	//gg := strings.Split(string(g), ".")
 
-	return gg
+	return g
 }
 
 //get DNS server address by read file "/etc/resolv.conf"
 //it returns a string slice, for example: {"8", "8", "8", "8"}
 //if there are two DNS server, merging them into one slice string, for example: {"8", "8", "8", "8", "8", "8", "4", "4"}
-func GetDNS() []string {
+func GetDNS() []byte {
 	var n []byte
 
 	b, err := ioutil.ReadFile(RESOLV_CONF)
@@ -141,8 +141,8 @@ func GetDNS() []string {
 		}
 	}
 
-	nn := strings.Split(string(n), ".")
-	return nn
+	//nn := strings.Split(string(n), ".")
+	return n
 }
 
 func GetDomainName() []byte {
