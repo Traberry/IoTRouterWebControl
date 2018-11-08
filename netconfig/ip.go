@@ -16,8 +16,8 @@ type IPConfiguration struct {
 
 	//is port name default eth0 ?
 	PortName string
-	IP string
-	Mask string
+	IP []string
+	Mask []string
 	GW string
 	MTU string
 	PrimaryDNS string
@@ -32,7 +32,9 @@ func (ipConf *IPConfiguration) SetMTU() {
 
 //change the IP directly by using command line "ifconfig"
 func (ipConf *IPConfiguration) SetIP() {
-	cmd := exec.Command("ifconfig", ipConf.PortName, ipConf.IP, "netmask", ipConf.Mask)
+	var newIP = ipConf.IP[0] + "." + ipConf.IP[1] + "." + ipConf.IP[2] + "." + ipConf.IP[3]
+	var newMask = ipConf.Mask[0] + "." + ipConf.Mask[1] + "." + ipConf.Mask[2] + "." + ipConf.Mask[3]
+	cmd := exec.Command("ifconfig", ipConf.PortName, newIP, "netmask", newMask)
 	cmd.Run()
 }
 
@@ -68,7 +70,7 @@ func (ipConf *IPConfiguration) SetOptionalDNS() {
 
 //get IP and Mask information, it returns two string slices
 //for example: {"192", "168", "10", "1"} and {"255", "255", "255", "0"}
-func (ipConf *IPConfiguration) GetIPandMask() ([]string, []string) {
+func (ipConf *IPConfiguration) GetIPandMask() {
 	var b []byte
 	var m []byte
 
@@ -90,7 +92,8 @@ func (ipConf *IPConfiguration) GetIPandMask() ([]string, []string) {
 	}
 	mm := strings.Split(string(m), ".")
 
-	return bb, mm
+	ipConf.IP = bb
+	ipConf.Mask = mm
 }
 
 //get default gateway information by command "route -n"
@@ -153,7 +156,10 @@ func (ipConf *IPConfiguration) WriteIP() {
 		fmt.Println(err)
 	}
 	defer file.Close()
-	n, err := file.WriteString("\n" + "auto " + ipConf.PortName + "\n" + "iface " + ipConf.PortName + " inet static\n" + "address " + ipConf.IP + "\n" + "netmask " + ipConf.Mask + "\n" + "gateway " + ipConf.GW)
+
+	var newIP = ipConf.IP[0] + "." + ipConf.IP[1] + "." + ipConf.IP[2] + "." + ipConf.IP[3]
+	var newMask = ipConf.Mask[0] + "." + ipConf.Mask[1] + "." + ipConf.Mask[2] + "." + ipConf.Mask[3]
+	n, err := file.WriteString("\n" + "auto " + ipConf.PortName + "\n" + "iface " + ipConf.PortName + " inet static\n" + "address " + newIP + "\n" + "netmask " + newMask + "\n" + "gateway " + ipConf.GW)
 	if err != nil {
 		fmt.Println(err)
 	}
