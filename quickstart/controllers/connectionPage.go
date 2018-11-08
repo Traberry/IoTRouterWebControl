@@ -24,15 +24,15 @@ func (c *ConnectionController) Get() {
 	/*************************Tab-2***************************/
 	var ipConf netconfig.IPConfiguration
 	ipConf.PortName = ETH_PORT
-	ipConf.GetIPandMask()
-	c.Data["ip_1"] = ipConf.IP[0]
-	c.Data["ip_2"] = ipConf.IP[1]
-	c.Data["ip_3"] = ipConf.IP[2]
-	c.Data["ip_4"] = ipConf.IP[3]
-	c.Data["mask_1"] = ipConf.Mask[0]
-	c.Data["mask_2"] = ipConf.Mask[1]
-	c.Data["mask_3"] = ipConf.Mask[2]
-	c.Data["mask_4"] = ipConf.Mask[3]
+	ip, mask :=ipConf.GetIPandMask()
+	c.Data["ip_1"] = ip[0]
+	c.Data["ip_2"] = ip[1]
+	c.Data["ip_3"] = ip[2]
+	c.Data["ip_4"] = ip[3]
+	c.Data["mask_1"] = mask[0]
+	c.Data["mask_2"] = mask[1]
+	c.Data["mask_3"] = mask[2]
+	c.Data["mask_4"] = mask[3]
 
 	gw := netconfig.GetGateway()
 	c.Data["gateway_1"] = gw[0]

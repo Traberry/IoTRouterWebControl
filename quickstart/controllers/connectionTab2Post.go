@@ -11,8 +11,8 @@ type Tab2Controller struct {
 
 func (c *Tab2Controller) Post() {
 	var ipConf netconfig.IPConfiguration
-	ipConf.IP = append(ipConf.IP, c.Input().Get("ip_1"), c.Input().Get("ip_2"), c.Input().Get("ip_3"), c.Input().Get("ip_4"))
-	ipConf.Mask = append(ipConf.Mask, c.Input().Get("mask_1"), c.Input().Get("mask_2"), c.Input().Get("mask_3"), c.Input().Get("mask_4"))
+	ipConf.IP = c.Input().Get("ip_1") + "." + c.Input().Get("ip_2") + "." + c.Input().Get("ip_3") + "." + c.Input().Get("ip_4")
+	ipConf.Mask = c.Input().Get("mask_1") + "." + c.Input().Get("mask_2") + "." + c.Input().Get("mask_3") + "." + c.Input().Get("mask_4")
 	ipConf.GW = c.Input().Get("gateway_1") + "." + c.Input().Get("gateway_2") + "." + c.Input().Get("gateway_3") + "." + c.Input().Get("gateway_4")
 	ipConf.PrimaryDNS = c.Input().Get("DNS1_1") + "." + c.Input().Get("DNS1_2") + "." + c.Input().Get("DNS1_3") + "." + c.Input().Get("DNS1_4")
 	ipConf.OptionalDNS = c.Input().Get("DNS2_1") + "." + c.Input().Get("DNS2_2") + "." + c.Input().Get("DNS2_3") + "." + c.Input().Get("DNS2_4")
