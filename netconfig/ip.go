@@ -118,8 +118,9 @@ func GetGateway() []byte {
 //get DNS server address by read file "/etc/resolv.conf"
 //it returns a string slice, for example: {"8", "8", "8", "8"}
 //if there are two DNS server, merging them into one slice string, for example: {"8", "8", "8", "8", "8", "8", "4", "4"}
-func GetDNS() []byte {
-	var n []byte
+func GetDNS() ([]byte, []byte) {
+	var dns1 []byte
+	var dns2 []byte
 
 	b, err := ioutil.ReadFile(RESOLV_CONF)
 	if err != nil {
@@ -129,20 +130,19 @@ func GetDNS() []byte {
 	str := string(b)
 	l1 := strings.Index(str, "nameserver") + len("nameserver") + 1
 	for i := l1; b[i] != '\n'; i++ {
-		n = append(n, b[i])
+		dns1 = append(dns1, b[i])
 	}
 
-	b2 := append([]byte{}, b[l1+len(n):]...)
+	b2 := append([]byte{}, b[l1+len(dns1):]...)
 	l2 := strings.Index(string(b2), "nameserver")
 	if l2 != -1 {
-		n = append(n, '.')
 		for i := l2 + 11; b2[i] != '\n'; i++ {
-			n = append(n, b2[i])
+			dns2 = append(dns2, b2[i])
 		}
+		return dns1, dns2
+	}else {
+		return dns1, nil
 	}
-
-	//nn := strings.Split(string(n), ".")
-	return n
 }
 
 func GetDomainName() []byte {
