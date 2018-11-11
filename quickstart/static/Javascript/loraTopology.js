@@ -20,7 +20,7 @@
 ];*/
 var treeData ;
 function setTopology() {
-    $.get("test.json",function(result){
+    $.get("/lora/topology",function(result){
         //result数据添加到容器中;
           treeData = transData(result, 'value', 'sj', 'children');
         //展示数据

@@ -21,6 +21,8 @@ func init() {
 	beego.Router("/lora/serverTable", &controllers.ServerTableController{})
 	beego.Router("/lora/applicationTable", &controllers.ApplicationTableController{})
 	beego.Router("/lora/applicationTable/deviceOfAppID/?:id", &controllers.DeviceOfAppTableController{})
-	beego.Router("/lora/deviceTable", &controllers.DeviceTableController{})
+	beego.Router("/lora/deviceTableApps", &controllers.DeviceTableController_1{})
+	beego.Router("/lora/deviceTableDevices/?:id", &controllers.DeviceTableController_2{})
+	beego.Router("/lora/topology", &controllers.TopoController{})
 
 }

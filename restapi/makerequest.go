@@ -71,6 +71,11 @@ type SimpleDevice struct {
 	DeviceStatusMargin int
 }
 
+type DeviceWithOrgID struct {
+	Name string
+	OrgID string
+}
+
 type Organization struct {
 	ID string
 	Name string
@@ -127,6 +132,10 @@ type DeviceList struct {
 
 type SimpleDeviceList struct {
 	Result []SimpleDevice
+}
+
+type DeviceWithOrgIDList struct {
+	Result []DeviceWithOrgID
 }
 
 type OrganizationList struct {
@@ -275,6 +284,32 @@ func GetSimpleDevices(appID, limit string) *SimpleDeviceList {
 	}else {
 		logs.Warn("GetSimpleDevices response is NOT OK: %v", response.StatusCode)
 		return nil
+	}
+
+	return &s
+}
+
+func GetDevicesWithOrgID(appID, organizationID, limit string) *DeviceWithOrgIDList {
+	var s DeviceWithOrgIDList
+	url := "https://" + IPAddressOfAPIServer + "/api/applications/" + appID + "/devices?limit=" + limit
+
+	response, err := MakeAPIRequest(url, "GET")
+	if err != nil {
+		logs.Error("Error while making API request to GetSimpleDevices: %v", err.Error())
+		return nil
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode == 200 {
+		bodyByte, _ := ioutil.ReadAll(response.Body)
+		json.Unmarshal(bodyByte, &s)
+	}else {
+		logs.Warn("GetSimpleDevices response is NOT OK: %v", response.StatusCode)
+		return nil
+	}
+
+	for i := 0; i < len(s.Result); i++ {
+		s.Result[i].OrgID = organizationID
 	}
 
 	return &s
