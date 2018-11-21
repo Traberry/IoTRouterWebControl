@@ -18,14 +18,20 @@
     {name:"枫桥",value:"010202",sj:"0102"},
     {name:"罗湖",value:"010301",sj:"0103"}
 ];*/
+var data = [
+    {"name":"loratest","value":"01","sj":"-"},{"name":"my-organization","value":"0101","sj":"01"},{"name":"test","value":"0102","sj":"01"},{"name":"test-seneor","value":"010101","sj":"0101"}
+];
 var treeData ;
 function setTopology() {
-    $.get("/lora/topology",function(result){
-        //result数据添加到容器中;
-          treeData = transData(result, 'value', 'sj', 'children');
-        //展示数据
-         drawTree(treeData);
-    });
+    treeData = transData(data, 'value', 'sj', 'children');
+    drawTree(treeData);
+    console.error('vvvv', data);
+    // $.get("/lora/topology",function(result){
+    //     //result数据添加到容器中;
+    //       treeData = transData(result, 'value', 'sj', 'children');
+    //     //展示数据
+    //      drawTree(treeData);
+    // });
 }
 
 

@@ -475,14 +475,14 @@ $(function () {
 var deviceData = [];
 var deviceTableArray = [];
 //$(function () {
-function  initDeviceTable (tableID) {
+function  initDeviceTable (tableID, val) {
     console.error('yyy', tableID);
     var appID = tableID-1;
 
     deviceTableArray[appID] = $('#deviceTable'+ tableID).DataTable({
         "ajax": {
             type: "GET",
-            url: "/lora/deviceTableDevices/" + tableID,
+            url: "/lora/deviceTableDevices/" + val,
             dataSrc: "Result"
         },
         "columns": [
@@ -576,8 +576,8 @@ function setDevice(){
             for (var i = 0; i < totalNum; i++) {
                 console.info("item: " + i);
                 var val = data[i].number;
-                console.error('vvvv', val);
-                initDeviceTable(val);
+                console.error('vvvv', i);
+                initDeviceTable(i, val);
             }
 
         }
