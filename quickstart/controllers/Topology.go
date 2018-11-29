@@ -12,9 +12,7 @@ type TopoController struct {
 	beego.Controller
 }
 
-type Topology struct {
-	Result []Contex `json:"data"`
-}
+type Topology []Contex
 type Contex struct {
 	Name string `json:"name"`
 	Value string `json:"value"`
@@ -24,11 +22,7 @@ type Contex struct {
 
 func (c *TopoController) Get() {
 	topo := topoAssemble()
-	fmt.Println(topo)
 	b, err := json.Marshal(topo)
-	for _, v := range b {
-		fmt.Printf("%c", v)
-	}
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -69,9 +63,9 @@ func topoAssemble() Topology {
 
 /************************************assemble all the data**************************************************/
 	var t Topology
-	t.Result = append(t.Result, layerOne)
-	t.Result = append(t.Result, layerTwo...)
-	t.Result = append(t.Result, layerThree...)
+	t = append(t, layerOne)
+	t = append(t, layerTwo...)
+	t = append(t, layerThree...)
 	return t
 }
 

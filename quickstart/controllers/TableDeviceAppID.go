@@ -28,8 +28,6 @@ func (c *DeviceTableController_1) Get() {
 		li.Result = append(li.Result, app{Name:(*appList).Result[i].Name, Number: (*appList).Result[i].ID})
 	}
 
-	fmt.Println("console message from DeviceTableController_1: ", li.Result)
-
 	b, err := json.Marshal(li.Result)
 	if err != nil {
 		fmt.Println(err)
