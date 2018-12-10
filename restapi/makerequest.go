@@ -93,7 +93,7 @@ type User struct {
 	IsActive bool
 	//CreatedAt string
 	//UpdatedAt string
-	//Email string
+	Email string
 	//Note string
 }
 
