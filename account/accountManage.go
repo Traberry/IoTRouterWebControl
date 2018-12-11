@@ -12,7 +12,7 @@ import (
 
 const (
 	token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJpc3MiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJuYmYiOjE1MzU0NDE5OTUsInN1YiI6InVzZXIiLCJ1c2VybmFtZSI6ImFkbWluIn0.-agKC7UzJL6fOordtJb7qVBwbGeUa8TW__C0LHlniXw"
-	IPAddressOfAPIServer = "192.168.3.109:8080"
+	IPAddressOfAPIServer = "192.168.3.105:8080"
 )
 
 type BelongOrg struct {

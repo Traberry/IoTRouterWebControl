@@ -22,8 +22,5 @@ func (c *OrgIDController) Get() {
 	if err != nil {
 		log.Warn("organization IDs json marshal error: %v", err.Error())
 	}
-	//fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
-	for _, v := range b {
-		fmt.Printf("%c", v)
-	}
+	fmt.Fprintf(c.Ctx.ResponseWriter, string(b))
 }

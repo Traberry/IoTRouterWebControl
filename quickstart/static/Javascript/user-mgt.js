@@ -76,19 +76,22 @@ $(function () {
             /*	}*/
         } else {
             var userName = $("#UserName").val();
+            var userPassword = $("#UserPasswd").val();
             var userEmail = $("#UserEmail").val();
             var isActive = $("#isActive").val();
+            var isGlobalAdmin = $("#isGlobalAdmin").val();
             var isOrgAdmin = $("#isOrgAdmin").val();
 
 
-            table.row.add([userName, userEmail,isActive,isOrgAdmin] ).draw();  //新增用户信息 （这里没有添加密码 和 系统管理员）
+            table.row.add([userName, userPassword, userEmail,isActive,isGlobalAdmin, isOrgAdmin] ).draw();  //新增用户信息 （这里没有添加密码 和 系统管理员）
             $("#addUserModal").find('input').val('')
             $.ajax({
                 url: '/user/addUser',
                 type:'post',
-                data: {"userName": userName, "userEmail": userEmail},
+                data: {"userName": userName, "userEmail": userEmail, "userPassword": userPassword, "isActive": isActive, "isGlobalAdmin": isGlobalAdmin, "isOrgAdmin": isOrgAdmin},
                 success: function (Res) {
                     alert(Res);
+                    console.error("ordID", isOrgAdmin)
                 },
                 error:function(e){
                     alert("发送失败");  //当前为测试，正式时请改为“发送失败"
@@ -99,22 +102,56 @@ $(function () {
     /*	$("#addUserInfo").click();*/
     $("#btn_add").click(function(){
         console.log('add');
+
+        /*----------- 新增用户  赋值组织管理员信息 Begin-----*/
+        $.ajax({
+            type:'get',
+            url:'/user/organizationIDs',
+            dataType:'json',
+            success:function(data){
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i]);
+                    $("#isOrgAdmin").append("<option value='"+data[i] + "'>"+ data[i] + "</option>");//添加option
+
+                }
+            }
+        });
+        /*----------- 新增用户  赋值组织管理员信息 End-----*/
+
         $("#addUser").modal()
     });
 
     $('#btn_edit').click(function () {
         console.log('edit');
         if (table.rows('.selected').data().length) {
-            $("#editUserInfo").modal()
-            var rowData = table.rows('.selected').data()[0];
 
-            var eachValue = new Array();
-            eachValue[0] = rowData[0];
-            $("#editUserName").val(rowData[0]);
-            $("#editUserEmail").val(rowData[1]);
+            /*----------- 修改用户  赋值组织管理员信息 Begin-----*/
+            $.ajax({
+                type:'get',
+                url:'/user/organizationIDs',
+                dataType:'json',
+                success:function(data){
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(data[i]);
+                        $("#isOrgAdminEdit").append("<option value='"+data[i] + "'>"+ data[i] + "</option>");//添加option
 
-            $("#isActiveEdit").val(rowData[2]);
-            $("#isOrgAdminEdit").val(rowData[3]);
+                    }
+
+                    $("#editUserInfo").modal()
+                    var rowData = table.rows('.selected').data()[0];
+
+                    var eachValue = new Array();
+                    eachValue[0] = rowData[0];
+                    $("#editUserName").val(rowData[0]);
+                    $("#editUserEmail").val(rowData[1]);
+
+                    $("#isActiveEdit").val(rowData[2]);
+                    $("#isGlobalAdminEdit").val(rowData[3]);
+                    $("#isOrgAdminEdit").val(rowData[4]);
+                }
+            });
+            /*----------- 修改用户  赋值组织管理员信息 End-----*/
+
         } else {
             alert('请选择一条用户信息');
         }
@@ -152,5 +189,36 @@ $(function () {
         table.row('.selected').remove().draw(false);
     });
 
-
 })
+
+
+/*-----新增用户   是否为系统管理员  -----*/
+$(function () {
+
+    $("select#isGlobalAdmin").change(function(){
+        if ($(this).val() == "否"){
+            $("#isOrgAdmin").attr("disabled",false);
+            $("#isOrgAdmin").removeClass("lightgray");
+        }
+        if ($(this).val() == "是"){
+            $("#isOrgAdmin").attr("disabled",true);
+            $("#isOrgAdmin").addClass("lightgray");
+        }
+    });
+
+
+    /* ------ 想办法知道 当前的登录的用户信息，知道后，设置$("#btn_add").attr("disabled",true);  ------------*/
+    $.ajax({
+        type:'get',
+        url:'root.txt',
+        dataType:'json',
+        success:function(data){
+            if (data[0] != "root"){
+                $("#btn_add").attr("disabled",true);
+                $("#btn_edit").attr("disabled",true);
+                $("#btn_delete").attr("disabled",true);
+            }
+        }
+    });
+
+});
