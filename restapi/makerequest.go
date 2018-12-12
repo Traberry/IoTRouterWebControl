@@ -86,14 +86,14 @@ type Organization struct {
 }
 
 type User struct {
-	//ID string
+	ID string
 	UserName string
 	//SessionTTL int
 	IsAdmin bool
 	IsActive bool
 	//CreatedAt string
 	//UpdatedAt string
-	Email string
+	//Email string
 	//Note string
 }
 

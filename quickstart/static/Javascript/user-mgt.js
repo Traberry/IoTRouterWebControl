@@ -14,8 +14,8 @@ $(function () {
             dataSrc: "Result"
         },
         columns: [
+            {data: "ID"},
             {data: "UserName"},
-            {data: "Email"},
             {data: "IsActive"},
             {data: "IsAdmin"}
         ],
@@ -125,33 +125,16 @@ $(function () {
         console.log('edit');
         if (table.rows('.selected').data().length) {
 
-            /*----------- 修改用户  赋值组织管理员信息 Begin-----*/
-            $.ajax({
-                type:'get',
-                url:'/user/organizationIDs',
-                dataType:'json',
-                success:function(data){
-                    for (var i = 0; i < data.length; i++) {
-                        console.log(data[i]);
-                        $("#isOrgAdminEdit").append("<option value='"+data[i] + "'>"+ data[i] + "</option>");//添加option
+            $("#editUserInfo").modal()
+            var rowData = table.rows('.selected').data()[0];
 
-                    }
+            var eachValue = new Array();
+            eachValue[0] = rowData[0];
+            $("#editUserName").val(rowData[0]);
+            $("#editUserEmail").val(rowData[1]);
 
-                    $("#editUserInfo").modal()
-                    var rowData = table.rows('.selected').data()[0];
-
-                    var eachValue = new Array();
-                    eachValue[0] = rowData[0];
-                    $("#editUserName").val(rowData[0]);
-                    $("#editUserEmail").val(rowData[1]);
-
-                    $("#isActiveEdit").val(rowData[2]);
-                    $("#isGlobalAdminEdit").val(rowData[3]);
-                    $("#isOrgAdminEdit").val(rowData[4]);
-                }
-            });
-            /*----------- 修改用户  赋值组织管理员信息 End-----*/
-
+            $("#isActiveEdit").val(rowData[2]);
+            $("#isGlobalAdminEdit").val(rowData[3]);
         } else {
             alert('请选择一条用户信息');
         }
@@ -161,8 +144,7 @@ $(function () {
         var editUserName = $("#editUserName").val();
         var editUserEmail =  $("#editUserEmail").val();
         var isActiveEdit = $("#isActiveEdit").val();
-        var isOrgAdminEdit = $("#isOrgAdminEdit").val();
-        var newRowData = [].concat(editUserName, editUserEmail,isActiveEdit, isOrgAdminEdit);
+        var newRowData = [].concat(editUserName, editUserEmail,isActiveEdit);
         console.log(newRowData);
 
         var tds = Array.prototype.slice.call($('.selected td'))
@@ -186,7 +168,22 @@ $(function () {
         }
     });
     $('#delete').click(function () {
+        //delete user in backend, how to get rowData ?????
+        var rowData = table.rows('.selected').data()[0].ID;
         table.row('.selected').remove().draw(false);
+        var d = "id=" + rowData;
+
+        /*----------- DELETE USER IN BACKEND-----*/
+        $.ajax({
+            type:'delete',
+            url:'/user/deleteUser',
+            data:d,
+            success:function(data){
+                    console.log("delete user:", data);
+                }
+        });
+        /*-----------DELETE USER IN BACKEND -----*/
+
     });
 
 })

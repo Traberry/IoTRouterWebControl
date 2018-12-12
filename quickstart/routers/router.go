@@ -30,5 +30,8 @@ func init() {
 	beego.Router("/user/userList", &controllers.UserTableController{})
 	beego.Router("/user/organizationIDs", &controllers.OrgIDController{})
 	beego.Router("/user/addUser", &controllers.UserAddController{})
+	beego.Router("/user/deleteUser", &controllers.UserDeleteController{})
+
+	beego.Router("/lora/uplink", &controllers.LoRaUplinkController{})
 
 }
