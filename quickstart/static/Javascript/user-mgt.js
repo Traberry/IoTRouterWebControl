@@ -126,15 +126,14 @@ $(function () {
         if (table.rows('.selected').data().length) {
 
             $("#editUserInfo").modal()
-            var rowData = table.rows('.selected').data()[0];
-
-            var eachValue = new Array();
-            eachValue[0] = rowData[0];
-            $("#editUserName").val(rowData[0]);
-            $("#editUserEmail").val(rowData[1]);
-
-            $("#isActiveEdit").val(rowData[2]);
-            $("#isGlobalAdminEdit").val(rowData[3]);
+            // var rowData = table.rows('.selected').data()[0];
+            //
+            // var eachValue = new Array();
+            // eachValue[0] = rowData[0];
+            // $("#editUserName").val(rowData[1]);
+            //
+            // $("#isActiveEdit").val(rowData[2]);
+            // $("#isGlobalAdminEdit").val(rowData[3]);
         } else {
             alert('请选择一条用户信息');
         }
@@ -144,17 +143,34 @@ $(function () {
         var editUserName = $("#editUserName").val();
         var editUserEmail =  $("#editUserEmail").val();
         var isActiveEdit = $("#isActiveEdit").val();
+        var isGlobalAdminEdit = $("#isGlobalAdminEdit").val();
+        var editUserPassword = $("#editUserPassword").val();
         var newRowData = [].concat(editUserName, editUserEmail,isActiveEdit);
+        var rowData = table.rows('.selected').data()[0].ID;
         console.log(newRowData);
 
-        var tds = Array.prototype.slice.call($('.selected td'))
-        for (var i = 0; i < newRowData.length; i++) {
-            if (newRowData[i] !== '') {
-                tds[i].innerHTML = newRowData[i];
-            } else {
-                alert(titles[i] + '内容不能为空')
+        /*-----------modify user information-----*/
+        $.ajax({
+            type:'put',
+            url:'/user/modifyUser',
+            data: {"userID":rowData, "userName": editUserName, "userEmail": editUserEmail, "userPassword": editUserPassword, "isActive": isActiveEdit, "isGlobalAdmin": isGlobalAdminEdit},
+            success: function (Res) {
+                alert(Res);
+            },
+            error:function(e){
+                alert("发送失败");  //当前为测试，正式时请改为“发送失败"
             }
-        }
+        });
+        /*-----------modify user information-----*/
+
+        // var tds = Array.prototype.slice.call($('.selected td'))
+        // for (var i = 0; i < newRowData.length; i++) {
+        //     if (newRowData[i] !== '') {
+        //         tds[i].innerHTML = newRowData[i];
+        //     } else {
+        //         alert(titles[i] + '内容不能为空')
+        //     }
+        // }
     })
     $("#cancelEdit").click(function() {
         console.log('cancelAdd');
@@ -168,7 +184,7 @@ $(function () {
         }
     });
     $('#delete').click(function () {
-        //delete user in backend, how to get rowData ?????
+        //delete user in backend, how to get rowData
         var rowData = table.rows('.selected').data()[0].ID;
         table.row('.selected').remove().draw(false);
         var d = "id=" + rowData;
