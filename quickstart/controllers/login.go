@@ -6,6 +6,8 @@ import (
 )
 
 var WrongUserPass = false
+var UserName string
+var Password string
 
 type LogController struct {
 	beego.Controller
@@ -21,10 +23,13 @@ func (c *LogController) Get() {
 }
 
 func (c *LogController) Post() {
-	username := c.Input().Get("username")
-	password := c.Input().Get("password")
+	UserName = ""
+	Password = ""
 
-	result := account.AccountValidate(username, password)
+	UserName = c.Input().Get("username")
+	Password = c.Input().Get("password")
+
+	result := account.AccountValidate(UserName, Password)
 
 	if result {
 		c.Redirect("/", 301)

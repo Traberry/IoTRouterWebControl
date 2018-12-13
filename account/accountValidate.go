@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"golang.org/x/crypto/pbkdf2"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -47,6 +48,22 @@ func AccountValidate(username, password string) bool {
 
 	return hashCompare(password, user.PasswordHash)
 
+}
+
+func IsGlobalAdmin(username string) bool {
+	db, err := sqlx.Open("postgres", dsn)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	user := User{}
+
+	err = sqlx.Get(db, &user, "select " + "*" + " from \"user\" where username = $1", username)
+	if err != nil {
+		log.Println("get user information from db error:", err)
+	}
+
+	return user.IsAdmin
 }
 
 func hashWithSalt(password string, salt []byte, iterations int) string {

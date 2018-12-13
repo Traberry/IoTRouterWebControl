@@ -223,10 +223,10 @@ $(function () {
     /* ------ 想办法知道 当前的登录的用户信息，知道后，设置$("#btn_add").attr("disabled",true);  ------------*/
     $.ajax({
         type:'get',
-        url:'root.txt',
+        url:'/user/judgeUser',
         dataType:'json',
         success:function(data){
-            if (data[0] != "root"){
+            if (data == false){
                 $("#btn_add").attr("disabled",true);
                 $("#btn_edit").attr("disabled",true);
                 $("#btn_delete").attr("disabled",true);

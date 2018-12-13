@@ -27,6 +27,7 @@ func init() {
 	beego.Router("/lora/topology", &controllers.TopoController{})
 
 	beego.Router("/user", &controllers.UserManagementController{})
+	beego.Router("/user/judgeUser", &controllers.UserJudgeController{})
 	beego.Router("/user/userList", &controllers.UserTableController{})
 	beego.Router("/user/organizationIDs", &controllers.OrgIDController{})
 	beego.Router("/user/addUser", &controllers.UserAddController{})

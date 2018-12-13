@@ -150,4 +150,18 @@ $(function () {
     $('#delete').click(function () {
         table.row('.selected').remove().draw(false);
     });
-})
+});
+
+/* ------ 想办法知道 当前的登录的用户信息，知道后，设置$("#btn_add").attr("disabled",true);  ------------*/
+$.ajax({
+    type:'get',
+    url:'/user/judgeUser',
+    dataType:'json',
+    success:function(data){
+        if (data == false){
+            $("#btn_add").attr("disabled",true);
+            $("#btn_edit").attr("disabled",true);
+            $("#btn_delete").attr("disabled",true);
+        }
+    }
+});
