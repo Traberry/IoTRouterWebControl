@@ -9,11 +9,14 @@ func init() {
 	beego.Router("/login", &controllers.LogController{})
     beego.Router("/", &controllers.MainController{})
 
+    beego.Router("/test", &controllers.TestController{})
+
 	beego.Router("/connection", &controllers.ConnectionController{})
 	beego.Router("/connection/tab1", &controllers.Tab1Controller{})
     beego.Router("/connection/tab2", &controllers.Tab2Controller{})
 	beego.Router("/connection/tab3", &controllers.Tab3Controller{})
 	beego.Router("/connection/tab4", &controllers.Tab4Controller{})
+	beego.Router("/connection/staticRouteTable", &controllers.RouterTableController{})
 	beego.Router("/wifi", &controllers.WiFiController{})
 
 	beego.Router("/lora", &controllers.LoRaController{})

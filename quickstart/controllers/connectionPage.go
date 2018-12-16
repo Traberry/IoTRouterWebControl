@@ -49,10 +49,10 @@ func (c *ConnectionController) Get() {
 	c.Data["DNS1_4"] = DNS1[3]
 	if d2 != nil {
 		DNS2 := strings.Split(string(d2), ".")
-		c.Data["DNS2_1"] = DNS2[4]
-		c.Data["DNS2_2"] = DNS2[5]
-		c.Data["DNS2_3"] = DNS2[6]
-		c.Data["DNS2_4"] = DNS2[7]
+		c.Data["DNS2_1"] = DNS2[0]
+		c.Data["DNS2_2"] = DNS2[1]
+		c.Data["DNS2_3"] = DNS2[2]
+		c.Data["DNS2_4"] = DNS2[3]
 	}
 
 	domain := netconfig.GetDomainName()

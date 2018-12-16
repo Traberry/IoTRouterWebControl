@@ -4,10 +4,16 @@
 
 
 var data = [];
-var titles = ['路由名称', '目标网络地址', '子网掩码', '网关', '接口'];
+var titles = ['目标网络地址', '子网掩码', '网关', '接口'];
 $(function () {
     var table = $('#staticRouter').DataTable({
-        "ajax": "/connection/tab4",
+        "ajax": "/connection/staticRouteTable",
+        columns: [
+            {data: "dstAddr"},
+            {data: "dstMask"},
+            {data: "gateway"},
+            {data: "port"}
+        ],
         "pagingType": "full_numbers",
         "bSort": true,
         "language": {
@@ -70,18 +76,17 @@ $(function () {
             alert('请输入内容')
             /*	}*/
         } else {
-            var routerName = $("#routerName").val()
             var targetIP = $("#targetIP_1").val() + "." + $("#targetIP_2").val() + "." + $("#targetIP_3").val() + "." + $("#targetIP_4").val()
             var mask = $("#mask_1").val() + "." + $("#mask_2").val() + "." + $("#mask_3").val() + "." + $("#mask_4").val()
             var gateway = $("#gateway_1").val() + "." + $("#gateway_2").val() + "." + $("#gateway_3").val() + "." + $("#gateway_4").val()
             var interfaceValue = $("#interface").val()
-            var addRouterInfos = [].concat(routerName, targetIP, mask, gateway, interfaceValue);
+            var addRouterInfos = [].concat(targetIP, mask, gateway, interfaceValue);
             for (var i = 0; i < addRouterInfos.length; i++) {
                 if (addRouterInfos[i] === '') {
                     alert(titles[i] + '内容不能为空')
                 }
             }
-            table.row.add(['', routerName, targetIP, mask, gateway, interfaceValue]).draw();
+            table.row.add([targetIP, mask, gateway, interfaceValue]).draw();
             $("#addRouterModal").find('input').val('')
         }
     })

@@ -621,6 +621,7 @@ $(function () {
 
 	<!-- 基本页面 路由器设置 编辑 -->
 	$("#basicEdit").click(function() {
+		
 		if ($(this).hasClass("blue")){
 			$(this).removeClass("blue");
 			$(this).addClass("edit_active");
@@ -788,6 +789,19 @@ $(function () {
 	});
 
 
+	$.ajax({
+        type:'get',
+        url:'/user/judgeUser',
+        dataType:'json',
+        success:function(data){
+            if (data == false){
+                $("#basicEdit").off("click");
+                alert("该用户角色无权进行编辑");
+            }
+        }
+    });
+
+	
 
 
 });

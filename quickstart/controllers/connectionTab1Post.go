@@ -20,11 +20,6 @@ func (c *Tab1Controller) Post() {
 	time.Sleep(1000 * time.Millisecond)
 	exec.Command("service",  "hostapd", "start").Run()
 
-	//set new account and password
-	if c.Input().Get("oldPassword") == beego.AppConfig.String("password") {
-		beego.AppConfig.Set("username", c.Input().Get("newAccount"))
-		beego.AppConfig.Set("password", c.Input().Get("newPassword"))
-	}
 
 	//firmware update
 	netconfig.DeleteFile("/home/pi/test.zip")
