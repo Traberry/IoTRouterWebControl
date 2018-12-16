@@ -3,6 +3,7 @@ package restapi
 import (
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego/logs"
 	"io/ioutil"
 	"net/http"
@@ -396,7 +397,8 @@ type GatewayStates struct {
 func GetGatewayActivity(mac string) string {
 	var activity string
 	var s GatewayStates
-	url := "https://192.168.3.109:8080/api/gateways/" + mac + "/stats?interval=day&startTimestamp=" + "2018-08-29T15:04:05.999999999Z" + "&endTimestamp=" + "2018-09-27T15:04:05.999999999Z"
+	url := "https://" + IPAddressOfAPIServer + "/" + mac + "/stats?interval=day&startTimestamp=" + "2018-11-18T15:04:05.999999999Z" + "&endTimestamp=" + "2018-12-15T15:04:05.999999999Z"
+	fmt.Println(url)
 	response, err := MakeAPIRequest(url, "GET")
 	if err != nil {
 		logs.Error("Error while making API request to GetServers: %v", err.Error())
