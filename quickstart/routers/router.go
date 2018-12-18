@@ -27,6 +27,7 @@ func init() {
 	beego.Router("/lora/applicationTable/deviceOfAppID/?:id", &controllers.DeviceOfAppTableController{})
 	beego.Router("/lora/deviceTableApps", &controllers.DeviceTableController_1{})
 	beego.Router("/lora/deviceTableDevices/?:id", &controllers.DeviceTableController_2{})
+	beego.Router("/lora/deviceActivation", &controllers.DeviceActivationController{})
 	beego.Router("/lora/topology", &controllers.TopoController{})
 
 	beego.Router("/user", &controllers.UserManagementController{})

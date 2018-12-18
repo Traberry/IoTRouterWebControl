@@ -489,6 +489,26 @@ function  initDeviceTable (tableID, val) {
         var data =  $("#deviceTable" + tableID).dataTable().fnGetData(Row);
         alert (data.Name);
 
+        if (data)
+        {
+            $.ajax({
+                url: '/lora/deviceActivation',//请求后台加载数据的方法
+                type:'post',
+                data: "devEUI=" + data.DevEUI,
+                success: function (jsonResult) {
+                    var obj = JSON.parse(jsonResult);
+                    document.getElementById("deviceAddress").innerHTML = obj.DevAddr;
+                    document.getElementById("deviceNetworkSKey").innerHTML = obj.AppSKey;
+                    document.getElementById("deviceAppSKey").innerHTML = obj.NwkSkey;
+                    document.getElementById("deviceUpCount").innerHTML = obj.FCntUp;
+                    document.getElementById("deviceDownCount").innerHTML = obj.FCntDown;
+                },
+                error:function(e){
+                    alert("发送失败");  //当前为测试，正式时请改为“发送失败"
+                }
+            })
+        }
+
         $("#viewDeviceInfo").modal()
     })
 }

@@ -76,6 +76,15 @@ type DeviceWithOrgID struct {
 	OrgID string
 }
 
+type DeviceActivation struct {
+	DevAddr string
+	AppSKey string
+	NwkSkey string
+	FCntUp int
+	FCntDown int
+	SkipFCntCheck bool
+}
+
 type Organization struct {
 	ID string
 	Name string
@@ -313,6 +322,28 @@ func GetDevicesWithOrgID(appID, organizationID, limit string) *DeviceWithOrgIDLi
 	}
 
 	return &s
+}
+
+func GetDeviceActivation(devEUI string) *DeviceActivation {
+	var d DeviceActivation
+	url := "https://" + IPAddressOfAPIServer + "/api/devices/" + devEUI + "/activation"
+
+	response, err := MakeAPIRequest(url, "GET")
+	defer response.Body.Close()
+	if err != nil {
+		logs.Error("Error while making API request to GetDeviceActivation: %v", err.Error())
+		return nil
+	}
+
+	if response.StatusCode == 200 {
+		bodyByte, _ := ioutil.ReadAll(response.Body)
+		json.Unmarshal(bodyByte, &d)
+	}else {
+		logs.Warn("GetSimpleDevices response is NOT OK: %v", response.StatusCode)
+		return nil
+	}
+
+	return &d
 }
 
 func GetOrganizations(limit string) *OrganizationList {

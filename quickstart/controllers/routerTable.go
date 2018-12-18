@@ -13,7 +13,9 @@ type RouterTableController struct {
 	beego.Controller
 }
 
-type routeTable []staticRouter
+type routeTable struct {
+	Result []staticRouter
+}
 
 type staticRouter struct {
 	DstAddr string `json:"dstAddr"`
@@ -33,13 +35,19 @@ func (c *RouterTableController) Get() {
 	}
 	routerTable, err := netlink.RouteList(link, netlink.FAMILY_V4)
 	for _, v := range routerTable {
-		staticRoutes = append(staticRoutes, parseNetlink(v, ETH_PORT))
+		staticRoutes.Result = append(staticRoutes.Result, parseNetlink(v, ETH_PORT))
 	}
 
 	b, err := json.Marshal(staticRoutes)
 	if err != nil {
 		log.Println("json marshal static route table error:", err)
 	}
+
+	fmt.Println("************static route table data*************")
+	for _, v := range b {
+		fmt.Printf("%c", v)
+	}
+	fmt.Println("************static route table data*************")
 
 	fmt.Fprint(c.Ctx.ResponseWriter, string(b))
 }

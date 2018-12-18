@@ -7,7 +7,11 @@ var data = [];
 var titles = ['目标网络地址', '子网掩码', '网关', '接口'];
 $(function () {
     var table = $('#staticRouter').DataTable({
-        "ajax": "/connection/staticRouteTable",
+        "ajax": {
+            type: "GET",
+            url: "/connection/staticRouteTable",
+            dataSrc: "Result"
+        },
         columns: [
             {data: "dstAddr"},
             {data: "dstMask"},
