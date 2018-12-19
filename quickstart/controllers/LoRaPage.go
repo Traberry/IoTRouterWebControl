@@ -7,5 +7,10 @@ type LoRaController struct {
 }
 
 func (c *LoRaController) Get() {
+	//judge user login first
+	if !LogIn {
+		c.Redirect("/login", 301)
+	}
+
 	c.TplName = "lora.html"
 }

@@ -43,12 +43,6 @@ func (c *RouterTableController) Get() {
 		log.Println("json marshal static route table error:", err)
 	}
 
-	fmt.Println("************static route table data*************")
-	for _, v := range b {
-		fmt.Printf("%c", v)
-	}
-	fmt.Println("************static route table data*************")
-
 	fmt.Fprint(c.Ctx.ResponseWriter, string(b))
 }
 

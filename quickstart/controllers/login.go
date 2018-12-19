@@ -6,6 +6,7 @@ import (
 )
 
 var WrongUserPass = false
+var LogIn = false
 var UserName string
 var Password string
 
@@ -32,6 +33,7 @@ func (c *LogController) Post() {
 	result := account.AccountValidate(UserName, Password)
 
 	if result {
+		LogIn = true
 		c.Redirect("/", 301)
 	} else {
 		WrongUserPass = true

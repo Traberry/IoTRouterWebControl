@@ -13,6 +13,11 @@ type ConnectionController struct {
 }
 
 func (c *ConnectionController) Get() {
+	//judge user login first
+	if !LogIn {
+		c.Redirect("/login", 301)
+	}
+
 	c.TplName = "connection.html"
 
 	/*************************Tab-1***************************/

@@ -307,7 +307,7 @@ $(function () {
                 data = data.split(",");
                 var lihtml = "";
                 for (var i = 0; i < data.length; i ++) {
-                    lihtml += "<li style='left:"+ 10 * (i+1)+"px;height:"+data[i]*0.03+"px'></li>";   //每个柱柱位置信息
+                    lihtml += "<li style='left:"+ 10 * (i+1)+"px;height:"+data[i]*0.01+"px'></li>";   //每个柱柱位置信息
                 }
                 return  '<div id="vert"><ul>'+lihtml+'</ul></div>';
 

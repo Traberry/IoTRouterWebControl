@@ -7,5 +7,10 @@ type UserManagementController struct {
 }
 
 func (c *UserManagementController) Get() {
+	//judge user login first
+	if !LogIn {
+		c.Redirect("/login", 301)
+	}
+
 	c.TplName = "user-mgt.html"
 }

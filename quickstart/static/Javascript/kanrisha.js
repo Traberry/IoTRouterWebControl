@@ -795,8 +795,14 @@ $(function () {
         dataType:'json',
         success:function(data){
             if (data == false){
-                $("#basicEdit").off("click");
-                alert("该用户角色无权进行编辑");
+                //$("#basicEdit").off("click");
+
+                $("#confirmTab1").attr({"disabled": "true"});
+                $("#confirmTab2").attr({"disabled": "true"});
+                $("#confirmTab3").attr({"disabled": "true"});
+                $("#confirmTab4").attr({"disabled": "true"});
+                $("#confirmTab5").attr({"disabled": "true"});
+                alert("该用户角色无权提交修改");
             }
         }
     });
