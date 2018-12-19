@@ -62,7 +62,17 @@ func parseNetlink(route netlink.Route, port string) staticRouter {
 		ipAndMask := route.Dst.String()
 		res := strings.Split(ipAndMask, "/")
 		sRouter.DstAddr = res[0]
-		sRouter.DstMask = res[1]
+
+		switch res[1] {
+		case "24":
+			sRouter.DstMask = "255.255.255.0"
+		case "16":
+			sRouter.DstMask = "255.255.0.0"
+		case "8":
+			sRouter.DstMask = "255.0.0.0"
+		default:
+			sRouter.DstMask = res[1]
+		}
 	}
 
 	if route.Gw == nil {
