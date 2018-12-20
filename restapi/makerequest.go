@@ -6,14 +6,15 @@ import (
 	"github.com/astaxie/beego/logs"
 	"io/ioutil"
 	"net/http"
+	"netconfig"
 	"strconv"
 )
 
+var IPAddressOfAPIServer string
+
 const (
 	token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJpc3MiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJuYmYiOjE1MzU0NDE5OTUsInN1YiI6InVzZXIiLCJ1c2VybmFtZSI6ImFkbWluIn0.-agKC7UzJL6fOordtJb7qVBwbGeUa8TW__C0LHlniXw"
-	//anotherToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJpc3MiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJuYmYiOjE1MzY3MTgzMDAsInN1YiI6InVzZXIiLCJ1c2VybmFtZSI6ImFkbWluIn0.wYaXH-XmpzoIwsSxCW1shPwCZ7F4x0PM0n0xmOzhiU8"
-	//anotherIPAddress = "121.49.107.48:8080"
-	IPAddressOfAPIServer = "192.168.3.105:8080"
+	//IPAddressOfAPIServer = "192.168.3.105:8080"
 )
 
 type Application struct {
@@ -189,6 +190,8 @@ func MakeAPIRequest(url, method string) (*http.Response, error) {
 //I changed the return from a value to a pointer, but I have not tried it yet (2018-09-04)
 func GetAllApplications(limit string) *ApplicationList {
 	var s ApplicationList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/applications?limit=" + limit
 	//url := "https://" + anotherIPAddress + "/api/applications?limit=" + limit
 
@@ -212,6 +215,8 @@ func GetAllApplications(limit string) *ApplicationList {
 
 func GetAllGateways(limit string) *GatewayList {
 	var s GatewayList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/gateways?limit=" + limit
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -234,6 +239,8 @@ func GetAllGateways(limit string) *GatewayList {
 
 func GetGatewayDetails(macAddress string) *GatewayDtails {
 	var s GatewayDtails
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/gateways/" + macAddress
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -256,6 +263,8 @@ func GetGatewayDetails(macAddress string) *GatewayDtails {
 
 func GetDevices(appID, limit string) *DeviceList {
 	var s DeviceList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/applications/" + appID + "/devices?limit=" + limit
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -278,6 +287,8 @@ func GetDevices(appID, limit string) *DeviceList {
 
 func GetSimpleDevices(appID, limit string) *SimpleDeviceList {
 	var s SimpleDeviceList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/applications/" + appID + "/devices?limit=" + limit
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -300,6 +311,8 @@ func GetSimpleDevices(appID, limit string) *SimpleDeviceList {
 
 func GetDevicesWithOrgID(appID, organizationID, limit string) *DeviceWithOrgIDList {
 	var s DeviceWithOrgIDList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/applications/" + appID + "/devices?limit=" + limit
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -326,6 +339,8 @@ func GetDevicesWithOrgID(appID, organizationID, limit string) *DeviceWithOrgIDLi
 
 func GetDeviceActivation(devEUI string) *DeviceActivation {
 	var d DeviceActivation
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/devices/" + devEUI + "/activation"
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -348,6 +363,8 @@ func GetDeviceActivation(devEUI string) *DeviceActivation {
 
 func GetOrganizations(limit string) *OrganizationList {
 	var s OrganizationList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/organizations?limit=" + limit
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -370,6 +387,8 @@ func GetOrganizations(limit string) *OrganizationList {
 
 func GetUsers(limit string) *UserList {
 	var s UserList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/users?limit=" + limit
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -392,6 +411,8 @@ func GetUsers(limit string) *UserList {
 
 func GetServers(limit string) *NetworkServerList {
 	var s NetworkServerList
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/network-servers?limit=" + limit
 
 	response, err := MakeAPIRequest(url, "GET")
@@ -427,6 +448,8 @@ type GatewayStates struct {
 func GetGatewayActivity(mac string) string {
 	var activity string
 	var s GatewayStates
+
+	getAPIAddress()
 	url := "https://" + IPAddressOfAPIServer + "/api/gateways/" + mac + "/stats?interval=day&startTimestamp=" + "2018-11-18T15:04:05.999999999Z" + "&endTimestamp=" + "2018-12-15T15:04:05.999999999Z"
 	response, err := MakeAPIRequest(url, "GET")
 	if err != nil {
@@ -449,37 +472,10 @@ func GetGatewayActivity(mac string) string {
 }
 
 
-/*
-func GetGatewayState(mac string) *GatewayStates {
-	var s GatewayStates
-	url := "https://192.168.3.109:8080/api/gateways/" + mac + "/stats?interval=day&startTimestamp=" + "2018-08-29T15:04:05.999999999Z" + "&endTimestamp=" + "2018-09-27T15:04:05.999999999Z"
-	response := MakeAPIRequest(url, "GET")
-	defer response.Body.Close()
-	if response.StatusCode == 200 {
-		bodyByte, _ := ioutil.ReadAll(response.Body)
-		json.Unmarshal(bodyByte, &s)
-	}else {
-		fmt.Println(response.Status)
-	}
-	return &s
+//get host IP information
+func getAPIAddress() {
+	var ipConf netconfig.IPConfiguration
+	ipConf.PortName = "eth0"
+	ip, _ :=ipConf.GetIPandMask()
+	IPAddressOfAPIServer = ip[0] + "." + ip[1] + "." + ip[2] + "." + ip[3] + ":" + "8080"
 }
-*/
-
-/*
-func DeviceListByAppID() {
-	var appID []string
-	appList := GetAllApplications("10")
-	count, _ := strconv.Atoi(appList.TotalCount)
-	for i := 0; i < count; i++ {
-		appID = append(appID, appList.Result[i].ID)
-	}
-
-	for _, v := range appID {
-		fmt.Printf("*****Application %s*****\n", v)
-		deviceList := GetDevices( v, "10")
-		deviceCount, _ := strconv.Atoi(deviceList.TotalCount)
-		for i := 0; i < deviceCount; i++ {
-			fmt.Println(deviceList.Result[i])
-		}
-	}
-}*/
