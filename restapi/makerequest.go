@@ -1,6 +1,7 @@
 package restapi
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"github.com/astaxie/beego/logs"
@@ -184,6 +185,40 @@ func MakeAPIRequest(url, method string) (*http.Response, error) {
 	}
 
 	return response, nil
+}
+
+func LoRaAppServerLogIn(userName, password string) int {
+	url := "https://" + IPAddressOfAPIServer + "/api/internal/login"
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify:true},
+	}
+	client := &http.Client{Transport:tr}
+
+	b := struct {
+		Password string `json:"password"`
+		UserName string `json:"username"`
+	}{
+		Password: password,
+		UserName: userName,
+	}
+	bb, _ := json.Marshal(b)
+	body := bytes.NewReader(bb)
+
+	req, err := http.NewRequest("POST", url, body)
+	if err != nil {
+		logs.Warn("construct log in request error: %v", err.Error())
+	}
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Grpc-Metadata-Authorization", token)
+	req.Header.Add("Access-Control-Allow-Origin", "https://192.168.3.105:8080")
+	req.Header.Set("Access-Control-Allow-Origin", "https://192.168.3.105:8080")
+
+	response, err := client.Do(req)
+	if err != nil {
+		logs.Warn("make a bad log in API request: %v", err.Error())
+	}
+	return response.StatusCode
 }
 
 //Would it be better if return a pointer instead of a value ???
