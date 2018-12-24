@@ -538,7 +538,7 @@ function setDevice(){
                 console.info("item: " + i);
                 var val = data[i].number;
                 console.error('vvvv', i);
-                initDeviceTable(i, val);
+                initDeviceTable(i+1, val);
             }
 
         }
