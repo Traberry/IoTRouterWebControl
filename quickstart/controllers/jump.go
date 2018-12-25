@@ -12,9 +12,11 @@ type JumpController struct {
 }
 
 func (c *JumpController) Post() {
-	status := restapi.LoRaAppServerLogIn("admin", "admin")
+	ip := restapi.IPAddressOfAPIServer
+	url := "https://" + ip
+	status := restapi.LoRaAppServerLogIn(UserName, Password)
 	if status == 200 {
-		c.Redirect("https://192.168.3.105:8080", 301)
+		c.Redirect(url, 301)
 	}else {
 		fmt.Fprint(c.Ctx.ResponseWriter, string(status))
 		log.Println("unauthorized")
