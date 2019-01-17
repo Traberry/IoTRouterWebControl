@@ -369,7 +369,15 @@ $(function () {
 var gatewayLogData = [];
 $(function () {
     var table = $('#gatewayLogTable').DataTable({
-        data: gatewayLogData,
+        "ajax": {
+            url: "/lora/gatewayLog",
+            dataSrc: "Result"
+        },
+        columns: [
+            {data: "Time"},
+            {data: "RxTxInfo"},
+            {data: "Payload"}
+        ],
         "pagingType": "full_numbers",
         "bSort": true,
         "language": {
