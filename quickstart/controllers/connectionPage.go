@@ -58,6 +58,11 @@ func (c *ConnectionController) Get() {
 		c.Data["DNS2_2"] = DNS2[1]
 		c.Data["DNS2_3"] = DNS2[2]
 		c.Data["DNS2_4"] = DNS2[3]
+	}else {
+		c.Data["DNS2_1"] = ""
+		c.Data["DNS2_2"] = ""
+		c.Data["DNS2_3"] = ""
+		c.Data["DNS2_4"] = ""
 	}
 
 	domain := netconfig.GetDomainName()
