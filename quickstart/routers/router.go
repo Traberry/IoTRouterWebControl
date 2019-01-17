@@ -40,6 +40,6 @@ func init() {
 	beego.Router("/user/modifyUser", &controllers.UserUpdateController{})
 	beego.Router("/user/deleteUser", &controllers.UserDeleteController{})
 
-	//beego.Router("/lora/uplink", &controllers.LoRaUplinkController{})
+	beego.Router("/lora/gatewayLog", &controllers.GatewayLogController{})
 
 }
